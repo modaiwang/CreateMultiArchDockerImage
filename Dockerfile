@@ -7,6 +7,7 @@ WORKDIR /app
 
 # 复制应用程序JAR包
 COPY sync-tool-1.0-SNAPSHOT.jar sync-tool-1.0-SNAPSHOT.jar
+COPY testCase/test.png /data/testCase/test.png
 
 ENV APP_ENV="--spring.profiles.active=prod"
 ENV JAVA_OPTS="-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=8098 -server -Xms512m -Xmx1024m -XX:+UseG1GC -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=/dumps/oom_dump.hprof"
