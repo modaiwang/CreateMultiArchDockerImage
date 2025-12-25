@@ -1,0 +1,41 @@
+name: Build ARM64 Docker Image and Export as Tar
+
+on:
+  push:
+    branches: [ main ]
+  # 你也可以添加手动触发选项，方便测试
+  workflow_dispatch:
+
+jobs:
+  build-and-save:
+    runs-on: ubuntu-latest-arm64  # 关键：使用原生ARM64运行器
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    # 可选：设置一个更友好的镜像标签，例如基于时间或提交号
+    - name: Set image tag
+      run: |
+        echo "IMAGE_NAME=myapp-arm64" >> $GITHUB_ENV
+        echo "IMAGE_TAG=latest-${{ github.sha:0:7 }}" >> $GITHUB_ENV
+
+    - name: Build Docker image
+      run: |
+        # 使用上面定义的变量构建镜像
+        docker build -t ${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }} .
+
+    - name: Save Docker image to tar file
+      run: |
+        # 将构建好的镜像保存为tar文件
+        docker save ${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }} -o ${{ env.IMAGE_NAME }}-${{ env.IMAGE_TAG }}.tar
+        # 可选：压缩tar包以减小体积
+        gzip ${{ env.IMAGE_NAME }}-${{ env.IMAGE_TAG }}.tar
+
+    - name: Upload tar file as artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: arm64-docker-image
+        path: ${{ env.IMAGE_NAME }}-${{ env.IMAGE_TAG }}.tar.gz  # 如果压缩了，这里是.gz格式
+        # 产物默认保留7天，你可以根据需要调整 retention-days
+        retention-days: 7
