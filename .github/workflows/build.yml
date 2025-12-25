@@ -8,7 +8,7 @@ on:
 
 jobs:
   build-and-save:
-    runs-on: ubuntu-24.04-arm64  # 关键：使用原生ARM64运行器
+    runs-on: ubuntu-22.04-arm  # 关键：使用原生ARM64运行器
 
     steps:
     - name: Checkout code
