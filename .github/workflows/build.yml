@@ -18,7 +18,7 @@ jobs:
     - name: Set image tag
       run: |
         echo "IMAGE_NAME=myapp-arm64" >> $GITHUB_ENV
-        echo "IMAGE_TAG=latest-${{ github.sha:0:7 }}" >> $GITHUB_ENV
+        echo "IMAGE_TAG=latest" >> $GITHUB_ENV
 
     - name: Build Docker image
       run: |
